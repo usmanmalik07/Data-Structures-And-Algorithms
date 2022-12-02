@@ -1,0 +1,304 @@
+#include <iostream>
+#include <string>
+#include <bits/stdc++.h>
+#include <ctype.h>
+using namespace std;
+
+
+
+int top=-1;
+char stackA[20];
+
+bool isEmpty(), isFull(),sameBrace(string s),multipleBrace(string s);
+void push(int val), display(),palindrome(string s),checkBalance(string str);
+char pop();
+string inToPostfix(string s);
+int precedence(char c),evaluatePostfix(string s),precedenceB(char c),peak();
+
+
+//is empty function
+bool isEmpty(){
+	if(top==-1){
+		return true;
+	}else{
+		return false;
+	}
+}
+		
+//is full function
+bool isFull(){
+	if(top==19){
+		return true;
+	}else{
+		return false;
+	}
+}
+		
+//push function
+void push(char val){
+	if(isFull()){
+		cout<<"Stack overflow"<<endl;
+	}else{
+		top++;
+		stackA[top]=val;
+	}
+}
+		
+//pop function
+char pop(){
+	if(isEmpty()){
+		cout<< "Stack is empty"<< endl;
+		return 0;
+	}else{
+		char poped=stackA[top];
+		stackA[top]='\0';
+		top--;
+		return poped;
+	}
+}
+
+int peak(){
+    if(isEmpty()){
+        return 1 ;
+    }else{
+        return stackA[top];
+    }
+}
+		
+//Display function
+void display(){
+	if(isEmpty()){
+		cout <<"Stack is empty"<< endl;
+	}else{
+		for(int i=top; i>=0; i--){
+		cout<< stackA[i] <<endl;
+		}
+	}
+
+}
+
+
+void palindrome(string s){
+	for(int i=0; i<s.length(); i++){
+		push(s.at(i));
+	}
+	string revString;
+	if(isEmpty()){
+		cout<<"Stack is empty"<<endl;
+	}else{
+		for(int i=top; i>=0; i--){
+			char poped =pop();
+			revString=revString + poped;
+		}
+	}
+	if(s==revString){
+		cout << "The string is Palindrome" << endl;
+	}else{
+		cout << "The string is not Palindrome" << endl;
+	}
+	
+}
+
+//Same braces Function
+bool sameBrace(string s){
+	for(int i=0; i<s.length(); i++){
+		if(s.at(i)=='('){
+			push(s.at(i));
+		}
+		else{
+			if(isEmpty()){
+				cout << "unBalanced";
+				return false;
+			}else if(s.at(i)==')'){
+					pop();	
+			}else{
+				return false;
+			}
+		}
+	}
+	if(isEmpty()){
+		cout << "balanced";
+	}else{
+		cout << "unBalanced";
+	}
+}
+//precedence
+int precedenceB(char c){
+	if(c=='('){
+		return 1;
+	}else if(c=='{'){
+		return 2;
+	}else if(c=='['){
+		return 3;
+	}else{
+		return -1;
+	}
+}
+
+
+
+//Multiple Braces
+bool multipleBrace(string s){
+	for(int i=0; i<s.length(); i++){
+		if(s.at(i)=='(' || s.at(i)=='[' || s.at(i)=='{'){
+			if(isEmpty()){
+				push(s.at(i));
+			}
+			else if (precedenceB(s.at(i)) <= precedenceB(stackA[top])){
+				push(s.at(i));
+			}else if(precedenceB(s.at(i)) > precedenceB(stackA[top])){
+				cout << "UnBalanaced";
+				return false;
+			}
+		}
+		else{
+			if(isEmpty()){
+				return false;
+			}else if(s.at(i)==')' && stackA[top]=='(' ){
+				pop();
+			}else if(s.at(i)==']' && stackA[top]=='[' ){
+				pop();
+			}else if(s.at(i)=='}' && stackA[top]=='{' ){
+				pop();
+			}else{
+				return false;
+			}
+		}
+	}
+	if(isEmpty()){
+		cout << "Balanced";
+	}else {
+		cout << "UnBalanaced";
+	}
+}
+//precedence
+int precedence(char c){
+	if(c=='+' || c=='-'){
+		return 1;
+	}else if(c=='*' || c=='/'){
+		return 2;
+	}else{
+		return -1;
+	}
+}
+
+
+//Infix to postfix conversion function
+string inToPostfix(string s){
+	string postfix;
+	
+	for(int i=0; i<s.length(); i++){
+		
+		if(s.at(i)=='+' || s.at(i)=='-' || s.at(i)=='*' || s.at(i)=='/'){
+			
+			if(isEmpty()){
+				push(s.at(i));
+			}
+			else if (precedence(s.at(i)) > precedence(stackA[top])){
+				push(s.at(i));
+			}
+			else if(precedence(s.at(i)) <= precedence(stackA[top])){
+				
+				while(precedence(s.at(i)) <= precedence(stackA[top]) && top>=0){
+					char p=pop();
+					postfix=postfix+p;
+				}
+				
+				if(precedence(s.at(i)) > precedence(stackA[top])){
+					push(s.at(i));
+				}	
+						
+			}
+		}
+		else if((s.at(i))=='('){
+			push(s.at(i));
+		}
+		else if((s.at(i))==')'){
+			
+			while(stackA[top]!='(' && top>=0){
+					char p=pop();
+					postfix=postfix+p;
+				}
+				
+			if(stackA[top]=='('){
+					pop();
+			}
+				
+		}
+		
+		else{	
+			postfix=postfix + s.at(i);
+		}
+		
+	}
+	if(top!=-1){
+		while(top!=-1){
+			char p=pop();
+			postfix=postfix+p;
+		}
+	}
+	return postfix;
+}
+
+int evaluatePostfix(string s){
+	for(int i=0; i<s.length(); i++){
+		if((s.at(i)) >='0' && (s.at(i)) <='9'){
+			push(s.at(i)-'0');
+		}else if(s.at(i)=='+' || s.at(i)=='-' || s.at(i)=='*' || s.at(i)=='/'){
+			
+			if(s.at(i)== '+'){
+				int x = int(peak());
+                pop();
+                int y = int(peak());
+                pop();
+				push(y+x);
+			}else if(s.at(i)== '-'){
+				int x = int(peak());
+                pop();
+                int y = int(peak());
+                pop();
+				push(y-x);
+			}else if(s.at(i)== '*'){
+				int x = int(peak());
+                pop();
+                int y = int(peak());
+                pop();
+				push(y*x);
+			}else if(s.at(i)== '/'){
+				int x = int(peak());
+                pop();
+                int y = int(peak());
+                pop();
+				push(y/x);
+			}		
+		}	
+	}
+	return peak();
+}
+
+
+int main(){
+	string s="7+5*3/5+(3-2)";
+	string s1="753*5/+32-+";
+	//string s2="21+3*";
+	//cout << s2<< endl;
+	//string f1=inToPostfix(s);
+	int f2=evaluatePostfix(s1);
+	cout << f2 << endl;
+	
+	//string s4="((()))";
+	//string s5="((())";
+	//string s6="(()))";
+	//string s7="[{()}]";
+	//string s8="({})";
+	//string s9="{([])}";
+	
+	//sameBrace(s5);
+	//checkBalance(s6);
+	//multipleBrace(s9);
+	
+	
+	
+
+	return 0;
+}
