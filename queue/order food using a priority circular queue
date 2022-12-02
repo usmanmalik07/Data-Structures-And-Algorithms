@@ -1,0 +1,127 @@
+  #include <stdio.h>
+#include <iostream>
+using namespace std;
+#define size 5
+
+int front = -1;
+int rear = -1;
+int operation;
+int tempage;
+string tempord;
+struct mai{
+        string order;
+        int age;
+};
+mai queue[size];
+mai new_order;
+void enqueue(string order,int age)  
+{  
+//Enqueue if order list isempty
+    if(front==-1 && rear==-1)   
+    {  
+        front=0;  
+        rear=0;  
+        queue[rear].order=order;
+		queue[rear].age=age;  
+    }  
+//Enqueue if order list is full
+    else if((rear+1)%size==front)  
+    {  
+        printf("Maximum orders received");  
+    }  
+    else  
+    { 
+// Enqueue if order list is not full not empty
+// IF AGE IS SMALLER 
+    if(new_order.age<queue[rear].age){
+    	rear=(rear+1)%size;       
+        queue[rear].age=age;
+        queue[rear].order=order;
+	}
+// IF AGE IS GREATER
+	else if(new_order.age>queue[rear].age){
+	
+	
+    for(int i=rear;i>=front;i--){
+    	if(age>queue[i].age){
+    		queue[i+1].age=queue[i].age;
+    		queue[i+1].order=queue[i].order;
+    		
+    		tempage = queue[i].age;
+    		tempord = queue[i].order;
+		}
+			queue[i].age=new_order.age;
+			queue[i].order=new_order.order;
+			rear=(rear+1)%size;
+		}
+	}
+// IF AGE IS EQUAL
+	else{
+		rear=(rear+1)%size;       
+        queue[rear].age=age;
+        queue[rear].order=order;
+	}
+    
+             
+    }  
+}
+
+void display()  
+{  
+    int i;
+	i=front;  
+    if(front==-1 && rear==-1)  
+    {  
+        printf("\n No orders received");  
+    }  
+    else  
+    {  
+        printf("\nCURRENT ORDERS ARE :\n");  
+        while((i+1)%size!=0 )
+        {  
+            cout<<"\nOrder number Depends on your age: "<<queue[i].age;
+            cout<<"\nOrder: "<<queue[i].order;
+            i=(i+1)%size;  
+        }  
+    }  
+} 
+void menu(){
+bool run;
+    cout<<"----------//PIZZA HUTT ORDER//----------";
+	cout<<"\n WELCOME TO PIZZA HUTT ENTER 1 TO ORDER AND 0 TO CLOSE ? 1/0 "<<endl;
+	
+	cin>>operation;
+    if(operation==1){
+    	run = true;
+	}
+	else if(operation==0){
+		run = false;
+	}
+	else {
+		cout<<"Wrong command";
+	}
+  
+      
+    if(run==true)    
+    {  
+        cout<<"\nwhat is your age And then  \n";
+        cout<<("\nEnter the food which you want to order\n ");  
+        cin>>new_order.age;
+        cin>>new_order.order;
+		
+        enqueue(new_order.order,new_order.age);  
+        cout<<"\norder placed successfully"<<endl;
+        cout<<"-----//-----//-----"<<endl;
+        display();
+        menu();
+        
+       
+	}
+
+}
+
+int main()
+
+{  
+menu();
+}
