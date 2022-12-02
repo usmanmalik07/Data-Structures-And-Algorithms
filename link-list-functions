@@ -1,0 +1,676 @@
+#include<iostream>
+using namespace std;
+
+void insert_at_start();        //TO ADD AT THE START
+void insert_at_end();
+void insert_after_specific();
+void insert_before_specific();
+void del_at_start();
+void del_at_end();
+void delete_nth_node();
+void menu();
+void display();
+// void even_odd();
+// void displayevenodd();
+
+
+
+struct stu{                    //MAKING A STRUCT
+    int id;
+    stu *next = NULL;          //TAKING THE POINTER'S VALUE AS NULL AT INITIAL
+    //stu *prev = NULL;          //WHERE THE ADDRESS WILL BE STORED
+};
+
+stu *first = NULL;              //MARKS THE NODE AS FIRST OR LAST AND TAKEN AS NULL AT INITIAL
+stu *last =NULL;
+stu *first2 = NULL;
+stu *last2 = NULL;
+stu *firsteven=NULL;
+stu *lasteven=NULL;
+stu *firstodd=NULL;
+stu *lastodd=NULL;
+stu *mfirst = NULL;
+stu *mlast = NULL;
+
+
+void insert_at_start(){
+    stu *current;              //INTIALIZING A CURRENT POINTER FOR THE NODE TO BE ADDED
+    current = new stu;         //MAKING THE OBJECT
+    cout<<"ENTER THE ID : ";   //INPUT FROM USER
+    cin>>current->id;
+
+    if(first==NULL){           //IF THE LIST IS EMPTY
+        first = last = current;//THE CURRENT WILL BE THE ONLY ENTRY THUS ASSIGNED AS FIRST AND LAST
+    }
+    else{                      //IF THE LIST IS NOT EMPTY
+        current->next=first;   
+      //  first->prev=current;
+        first = current;
+       // first->prev = NULL;
+
+    }
+}
+
+
+void insert_at_end(){
+    stu *current = NULL;
+    current = new stu;
+    cout<<"ENTER THE ID : ";
+    cin>>current->id;
+
+    if(first == NULL){
+        first = last = current;
+    }
+    else{
+        last->next = current;
+        //current->prev = last;
+        last = current;
+        last->next = NULL;
+    
+}
+}
+void insert_list2(stu **f,stu **l){
+	stu *curr;
+	curr = new stu;
+	
+	cout<<"Enter id: ";
+	cin>>curr->id;
+
+	if(*f==NULL){
+		(*f)=(*l)=curr;
+	}
+	else{
+		(*l)->next = curr;
+		(*l) = curr;
+	}
+	
+}
+void insert_end2(stu **f,stu **l,stu *p){
+	stu *curr;
+	curr = new stu;
+	
+	curr=p;
+
+	if(*f==NULL){
+		*f=*l=curr;
+	}
+	else{
+		(*l)->next = curr;
+		(*l) = curr;
+	}
+	
+}
+void display2(stu **f){
+	
+	if(*f==NULL)
+	{
+		cout<<"\n List is empty";
+	}
+	else
+	{
+		while(*f!=NULL)
+		{
+			cout<<"\n"<<(*f)->id<<endl;
+			*f=(*f)->next;
+		}
+	} 
+}
+
+
+void insert_after_specific(){
+    cout<<"ENTER ID AFTER WHICH IT WILL BE ADDED : ";
+    int key;
+    cin>>key;
+
+    stu *curr;
+    curr = new stu;
+    cout<<"ENTER ID TO BE ADDED : ";
+    cin>>curr->id;
+
+    stu *forfirst;
+    forfirst = first;
+
+    stu *forlast;
+    forlast = last;
+
+    if(forfirst->id==key){
+        curr->next = first->next;
+        first->next=curr;
+    }
+    else if(forlast->id==key){
+        last->next = curr;
+        last = curr;
+    }
+    else{
+        while(forfirst->next!=NULL){
+            if(forfirst->id==key){
+                curr->next=forfirst->next;
+                forfirst->next = curr;
+            }
+            forfirst = forfirst->next;
+        }
+    }
+    
+}
+
+void insert_before_specific(){
+    cout<<"ENTER ID BEFORE WHICH TO BE ADDED :";
+    int key;
+    cin>>key;
+
+    cout<<"ENTER THE ID TO BE ADDED : ";
+    stu*curr;
+    curr = new stu;
+    cin>>curr->id;
+
+    stu *forfirst;
+    forfirst = first;
+    stu *forlast;
+    forlast = first->next;
+
+    if(forfirst->id==key){
+        curr->next = first;
+        first = curr;
+    }
+
+    else{
+        while(forlast!=NULL){
+            if(forlast->id==key){
+                forfirst -> next = curr;
+                curr -> next = forlast;
+            }
+            forlast = forlast->next;
+            forfirst = forfirst->next;
+        }
+        }
+
+    }
+    
+
+void del_at_start(){
+    if(first==last){
+        first = last = NULL;
+    }
+    else{
+        stu *pointer = first;
+        first = first->next;
+        delete pointer;
+        //first->prev = NULL;
+    }   
+}
+void del_at_end(){
+    stu *pointer;
+    pointer = first;
+    if(first == last){
+        first = last = NULL;
+    }
+    else{
+        while(pointer!=NULL){
+            if(pointer->next==last){
+                pointer->next = NULL;
+                break;
+            }
+            pointer = pointer->next;
+        }
+        last = pointer;
+        last->next = NULL;
+    }
+}
+
+void del_specific(stu *x){
+    // cout<<"ENTER THE ID TO BE DELT : ";
+    // int key;
+    // cin>>key;
+
+    stu *forfirst;
+    stu *forlast;
+    stu *firstnext;
+
+    forfirst = first;
+    forlast = last;
+    firstnext = first->next;
+
+    if(forfirst==x){
+        first = firstnext;
+    }
+    else if(forlast==x){
+        while(forfirst->next!=last){
+            forfirst = forfirst->next;
+        }
+    forfirst ->next  =  NULL;
+    last = forfirst;
+    }
+    else{
+        while(firstnext->next!=NULL){
+            if(firstnext==x){
+                forfirst->next = firstnext->next;
+            }
+            forfirst = forfirst->next;
+            firstnext = firstnext->next;
+        }
+    }
+}
+stu* search(stu *x){
+    stu *forfirst;
+    forfirst = first;
+    stu* forlast;
+    while(forfirst!=x){
+        forlast=forfirst;
+        forfirst = forfirst->next;
+    }
+    return forlast;    
+}
+    
+//REVERSE LIST 
+
+void reverse_list(){
+	stu *temp = NULL;
+    stu *p = NULL;
+    stu *p1 = first;
+
+    while(p1 != NULL) {
+        temp = p1 -> next;
+        p1 -> next = p;
+        p = p1;
+        p1 = temp;
+    }
+    first = p;
+ }
+ 
+ // DELETE NTH NODE
+ 
+ 
+void delete_nth_node(){
+    int nthnode;
+    cout<<"ENTER THE NODE U WANT TO DEL : ";
+    cin>>nthnode;
+
+
+
+stu *temp = NULL;
+    stu *p = NULL;
+    stu *p1 = first;
+    stu* temp2 = NULL;
+    while(p1 != NULL) {
+        temp = p1 -> next;
+        p1 -> next = p;
+        p = p1;
+        p1 = temp;
+    }
+    first = p;
+    
+for(int i =1;i<=nthnode;i++){
+    if(p!=NULL){
+        if(nthnode==1){
+        temp2 = p;
+        p= p -> next ;
+    			delete temp2;
+    			first = p;
+    			break;
+			}
+			else{
+				if(i == nthnode-1 ){
+	    			temp2 = p -> next;
+	    			p -> next = p -> next -> next;
+	    			delete temp2;
+	    			break;
+				}
+			}
+    }
+	    p = p -> next;	
+}
+	reverse_list();
+}
+
+ void reverse_display(){
+    stu *forfirst = first;
+    stu *forlast = last;
+    cout<<last->id<<endl;
+    while(forfirst!=NULL){
+        if(forfirst->next==forlast){
+            cout<<forfirst->id<<endl;
+            forlast = forfirst;
+        forfirst = first;
+        }
+        else{
+            forfirst=forfirst->next;
+        }
+    }
+
+
+
+
+
+
+ 	// stu *temp = NULL;
+    // stu *p = NULL;
+    // stu *p1 = first;
+    // while(p1 != NULL) {   
+    //     temp = p1 -> next;
+    //     p1 -> next = p;
+    //     p = p1;
+    //     p1 = temp;
+    // }
+    // first = p;
+    // while (p != NULL) {
+	// 	cout <<p->id << endl;
+	// 	p = p-> next;
+	// }
+ }
+
+ void remove_repeated_values(){
+	stu *forfirst = first;
+	stu *p;
+	stu * duplicate;
+	
+	while(forfirst != NULL){
+		p = forfirst;
+		while(p -> next != NULL){
+		
+			if(forfirst -> id == p -> next -> id){
+				duplicate = p -> next;
+				del_specific(duplicate);
+			}
+			else{
+				p = p -> next;
+			}	
+		}
+		forfirst = forfirst -> next;
+	}
+ }
+
+void intersection(){
+	stu *p;
+	p=first;
+	stu *q;
+    q = first2;
+	while(p!=NULL){
+		q = first2;
+		while(q!=NULL){
+			if(q->id==p->id){
+				cout<<endl<<"INTERSECTION AT : "<<p->id<<endl;
+			}
+			q=q->next;
+		}
+		p=p->next;
+	}
+	
+}
+void swap(int n){
+	
+	stu *p;
+	p=first;
+    for(int i=0;i<n-1;i++){
+		p=p->next;	
+	}
+	stu *q;
+	q=last;
+	
+	for(int i=0;i<n-1;i++){
+		q=search(q);
+	}		
+    int a = p->id;
+		p->id = q->id;
+		q->id = a;
+}
+
+void SwapNodes(stu * x, stu * prev_x, stu * y, stu * prev_y) {
+	if(prev_x != NULL) {
+		prev_x -> next = y;
+	}
+	else {
+		first = y;
+	}
+	if(prev_y != NULL) {
+		prev_y -> next = x;
+	}
+	else {
+		first = x;
+	}
+	
+	stu *temp = x -> next;
+	x -> next = y -> next;
+	y -> next = temp;
+	
+	if(x -> next == NULL) {	
+		last = x;
+	}
+	
+	if(y -> next == NULL) {
+		last = y;
+	}
+}
+
+ //Rotate the linked list (swap 1st with last node, 2nd with 2nd last node and so on).
+ void rotate_list(){
+	stu * x = first;
+	stu * prev_x = NULL;
+	stu * y = last;
+	stu * prev_y = NULL;
+	stu * temp = NULL;
+	
+	if(x == NULL) {
+		cout<<"list is empty";
+	}
+	else  {
+		while (x != y) {
+			prev_y = x;
+			
+			while(prev_y -> next != y) {
+				prev_y = prev_y -> next;
+			}
+			SwapNodes(x , prev_x , y , prev_y);
+			
+			temp = x;
+			x = y;
+			y = temp;
+			
+			prev_x = x;
+			x = x -> next;
+			y = prev_y;
+		}
+	}
+ }
+
+
+void evenodd(){
+	stu *p;
+	p=first;
+	
+	while(p!=NULL){
+		if(p->id%2==0){
+			insert_end2(&firsteven,&lasteven,p);
+		}
+		else{
+		
+			insert_end2(&firstodd,&lastodd,p);
+	}
+	p=p->next;
+	
+			
+	}
+    cout<<"EVEN LIST : "<<endl;
+	display2(&firsteven);	
+    cout<<endl<<"ODD LIST : "<<endl;
+	display2(&firstodd);	
+}
+void sort(){
+	stu* p = first;
+	stu* q = NULL;
+
+	while (p->next != NULL) {
+		q = first;
+
+		while (q->next != NULL) {
+			if ((q->id > q->next->id) && q->next != NULL) {
+				int x = q->id;
+				q->id = q->next->id;
+				q->next->id= x;
+			}
+			q = q->next;
+		}
+		p = p->next;
+	}
+}
+
+
+void merge_lists(){
+	
+    if(first==NULL||first2==NULL){
+		cout<<"\nList Not Found!\n";
+	}
+	else{
+	
+	stu *q=last;
+	q->next=first2;
+	
+	sort();
+	mfirst = first;
+	display2(&first);
+}
+            //         while(p!=NULL ){
+            //              p1 = first2;
+            //              while(p1!=NULL){
+            //                  if(p->id<p1->id){
+            //                      insert_end2(&mfirst,&mlast,p);
+            //                      p=p->next;
+            //                      break;
+            //                  }
+                            
+            //                      if(p->id>p1->id){
+            //                          insert_end2(&mfirst,&mlast,p1);
+            //                          p1=p1->next;
+            //                        break;
+            //                        }
+            //                        if(p->id==p1->id){
+            //                            insert_end2(&mfirst,&mlast,p);
+            //                             insert_end2(&mfirst,&mlast,p1);
+            //                              p=p->next;
+            //                              p1=p1->next;
+            //                              break;
+            //                         }
+            //             }
+
+            // }
+
+        }
+	
+	
+
+
+
+void menu(){
+int choice;
+    cout<<"SELECT ANY OF THE FOLLOWING :"<<endl;
+    cout<<endl<<"1) INSERT AT START"<<endl<<"2) INSERT AT END"<<endl<<"3) INSERT AFTER SPECIFIC"<<endl<<"4) INSERT BEFORE SPECIFIC"<<endl<<"5) DELETE AT START"<<endl<<"6) DELETE AT END"<<endl<<"7) DISPLAY"<<endl;
+    cout<<"ENTER YOUR CHOICE : ";
+    cin>>choice;
+    switch (choice)
+    {
+    case 1 :
+        insert_at_start();
+        menu();
+        break;
+    case 2 :
+        insert_at_end();
+        menu();
+        break;
+    case 3 :
+        insert_after_specific();
+        menu();
+        break;
+    case 4 :
+        insert_before_specific();
+        menu();
+        break;
+    case 5 :
+        del_at_start();
+        menu();
+        break;
+    case 6 :
+        del_at_end();
+        menu();
+        break;
+    case 7 :
+        display();
+        menu();
+        break;
+    default:
+        cout<<"'INVALID CHOICE";
+        break;
+    case 8 :
+        delete_nth_node();
+        menu();
+        break;
+    case 9 :
+    reverse_list();
+    menu();
+    break;
+    // case 10 :
+    // even_odd();
+    // menu();
+    // case 11 :
+    // displayevenodd();
+    // menu;
+    case 12 :
+    del_specific(last);
+    menu();
+    case 13 :
+    reverse_display();
+    menu();
+    case 14 :
+    remove_repeated_values();
+    menu();
+    case 15:
+    insert_list2(&first2, &last2);
+    menu();
+    break;
+    case 16:
+    display2(&first2);
+    menu();
+    break;
+    case 17 :
+    intersection();
+    menu();
+    break;
+    case 18 :
+    int start;
+    cout<<"ENTER NTH NODE"<<endl;
+    cin>>start;
+    menu();
+    break;
+    case 19 :
+    rotate_list();
+    menu();
+    break;
+    case 20 :
+    evenodd();
+    menu();
+    break;
+    case 21 :
+    merge_lists();
+    display2(&mfirst);
+    menu();
+    break;
+    }
+}
+
+void display(){
+    stu *pointer;
+    pointer = first;
+
+    while(pointer!=NULL){
+        cout<<pointer->id<<endl<<endl;
+        pointer = pointer->next;
+    }
+    
+
+}
+
+int main(){
+    menu();
+    return 0;
+}
+
+
+
